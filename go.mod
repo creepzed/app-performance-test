@@ -1,4 +1,4 @@
-module app-performace-test
+module github.com/creepzed/app-performace-test
 
 go 1.22
 
