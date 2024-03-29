@@ -27,13 +27,13 @@ func echoPost(c echo.Context) error {
 		return err
 	}
 	response := responseData([]byte(m.Message))
-	time.Sleep(responseDelay(c.QueryParam("response_delay")))
+	time.Sleep(responseDelay(c.QueryParam("delay")))
 	return c.JSON(http.StatusCreated, response)
 }
 
 func echoGet(c echo.Context) error {
-	response := responseData(createData(c.QueryParam("response_size")))
-	time.Sleep(responseDelay(c.QueryParam("response_delay")))
+	response := responseData(createData(c.QueryParam("size")))
+	time.Sleep(responseDelay(c.QueryParam("delay")))
 	return c.JSON(http.StatusOK, response)
 }
 
