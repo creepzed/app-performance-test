@@ -34,7 +34,7 @@ func echoPost(c echo.Context) error {
 func echoGet(c echo.Context) error {
 	response := responseData(createData(c.QueryParam("response_size")))
 	responseDelay(c.QueryParam("response_delay"))
-	return c.JSON(http.StatusCreated, response)
+	return c.JSON(http.StatusOK, response)
 }
 
 func responseData(responseData []byte) Response {
