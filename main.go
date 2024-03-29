@@ -27,13 +27,13 @@ func echoPost(c echo.Context) error {
 		return err
 	}
 	response := responseData([]byte(m.Message))
-	responseDelay(c.QueryParam("response_delay"))
+	time.Sleep(responseDelay(c.QueryParam("response_delay")))
 	return c.JSON(http.StatusCreated, response)
 }
 
 func echoGet(c echo.Context) error {
 	response := responseData(createData(c.QueryParam("response_size")))
-	responseDelay(c.QueryParam("response_delay"))
+	time.Sleep(responseDelay(c.QueryParam("response_delay")))
 	return c.JSON(http.StatusOK, response)
 }
 
@@ -60,14 +60,12 @@ func createData(sizeParam string) []byte {
 	return responseData
 }
 
-func responseDelay(delayParam string) {
+func responseDelay(delayParam string) time.Duration {
 	delay, err := strconv.Atoi(delayParam)
 	if err != nil {
 		delay = 0
 	}
-	if delay > 0 {
-		time.Sleep(time.Duration(delay) * time.Millisecond)
-	}
+	return time.Duration(delay) * time.Millisecond
 }
 
 func main() {
