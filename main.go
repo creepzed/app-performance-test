@@ -13,8 +13,8 @@ type Request struct {
 }
 
 type Response struct {
-	ResponseSize float64 `json:"size"`
-	Message      string  `json:"message"`
+	ResponseSize int    `json:"size"`
+	Message      string `json:"message"`
 }
 
 func ping(c echo.Context) error {
@@ -22,24 +22,24 @@ func ping(c echo.Context) error {
 }
 
 func echoPost(c echo.Context) error {
-	delayResponse(c.QueryParam("delay"))
-
 	m := &Request{}
 	if err := c.Bind(m); err != nil {
 		return err
 	}
-
-	return c.JSON(http.StatusCreated, responseData([]byte(m.Message)))
+	response := responseData([]byte(m.Message))
+	responseDelay(c.QueryParam("response_delay"))
+	return c.JSON(http.StatusCreated, response)
 }
 
 func echoGet(c echo.Context) error {
-	delayResponse(c.QueryParam("delay"))
-	return c.JSON(http.StatusCreated, responseData(createData(c.QueryParam("size"))))
+	response := responseData(createData(c.QueryParam("response_size")))
+	responseDelay(c.QueryParam("response_delay"))
+	return c.JSON(http.StatusCreated, response)
 }
 
 func responseData(responseData []byte) Response {
 	response := Response{
-		ResponseSize: float64(len(responseData) / 1024),
+		ResponseSize: len(responseData),
 		Message:      string(responseData),
 	}
 	return response
@@ -52,15 +52,15 @@ func createData(sizeParam string) []byte {
 	}
 	var responseData []byte
 	if size > 0 {
-		responseData = make([]byte, size*1024)
-		for i := 0; i < size*1024; i++ {
+		responseData = make([]byte, size)
+		for i := 0; i < size; i++ {
 			responseData[i] = 'A'
 		}
 	}
 	return responseData
 }
 
-func delayResponse(delayParam string) {
+func responseDelay(delayParam string) {
 	delay, err := strconv.Atoi(delayParam)
 	if err != nil {
 		delay = 0
