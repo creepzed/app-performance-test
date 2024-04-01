@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"net/http"
@@ -13,6 +14,7 @@ type Request struct {
 }
 
 type Response struct {
+	Id           string `json:"id"`
 	ResponseSize int    `json:"size"`
 	Message      string `json:"message"`
 }
@@ -39,6 +41,7 @@ func echoGet(c echo.Context) error {
 
 func responseData(responseData []byte) Response {
 	response := Response{
+		Id:           uuid.New().String(),
 		ResponseSize: len(responseData),
 		Message:      string(responseData),
 	}
